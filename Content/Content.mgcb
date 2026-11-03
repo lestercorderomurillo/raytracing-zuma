@@ -1,0 +1,37 @@
+/outputDir:bin/$(Platform)
+/intermediateDir:obj/$(Platform)
+/platform:DesktopVK
+/profile:HiDef
+/compress:False
+
+#begin art/frog-guardian.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:GenerateMipmaps=True
+/processorParam:TextureFormat=Color
+/build:art/frog-guardian.png
+
+#begin art/marbles-roll.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:GenerateMipmaps=True
+/processorParam:TextureFormat=Color
+/build:art/marbles-roll.png
+
+#begin art/temple-courtyard.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:GenerateMipmaps=True
+/processorParam:TextureFormat=Color
+/build:art/temple-courtyard.png
+
+#begin art/temple-props.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:GenerateMipmaps=True
+/processorParam:TextureFormat=Color
+/build:art/temple-props.png

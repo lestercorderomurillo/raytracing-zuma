@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RadiantRoot Condition="'$(RadiantRoot)' == ''">$(MSBuildProjectDirectory)/../../../radiant-game-engine</RadiantRoot>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RollForward>Major</RollForward>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../raytracing-zuma.csproj" />
+  </ItemGroup>
+</Project>

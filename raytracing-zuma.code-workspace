@@ -1,0 +1,7 @@
+{
+  "folders": [
+    { "path": "." },
+    { "path": "../radiant-game-engine" }
+  ],
+  "settings": { "files.associations": { "*.fx": "hlsl" } }
+}
