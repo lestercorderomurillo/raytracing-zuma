@@ -29,6 +29,7 @@ public sealed class ZumaScene : Scene
     public override void SetupScene()
     {
         Inspector.CreateWindow("zuma", "Zuma", 2, Visible: false);
+        Inspector.AddButton("zuma", "cameraControls", "Camera controls", () => Inspector.OpenCameraControls());
         Inspector.AddButton("zuma", "restart", "Restart level", () => Game.StartLevel(Game.Level));
         Inspector.AddToggle("zuma", "pause", "Pause gameplay", false, paused => Game.Paused = paused);
         Inspector.AddDropdown("zuma", "level", "Level", ZumaGame.LevelNames, 0, level => Game.StartLevel(level));

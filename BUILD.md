@@ -42,3 +42,7 @@ dotnet publish raytracing-zuma.csproj -c Release -r linux-x64 --self-contained t
 ```
 
 Keep the complete output together, including runtime, native libraries, fonts, and engine shaders. No hosting service or web framework is involved.
+
+## Shared camera controller
+
+With Radiant v0.2.1, open F1 > ECS > Open Camera Controls, or use the Camera controls button in the game settings. The single window searches camera IDs/types and selects instances independently of the entity inspector. This game uses the fitted 2D World view: enable Navigate camera and hold RMB with WASD to pan, or use Zoom in / Zoom out. Adjust movement speed for world units. Closing the controller stops navigation. Changing levels restores the game framing where the scene calls FitWorld.
