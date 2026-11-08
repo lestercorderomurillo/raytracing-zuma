@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace RaytracingZuma;
 
+/// <summary>Samples a polyline by traveled distance for marble placement and aiming.</summary>
 public sealed class MarblePath
 {
     private readonly Vector2[] points;
@@ -9,6 +10,7 @@ public sealed class MarblePath
     public float Length => distances[^1];
     public IReadOnlyList<Vector2> Points => points;
 
+    /// <summary>Builds cumulative segment lengths, rejecting paths with fewer than two points or zero length.</summary>
     public MarblePath(IEnumerable<Vector2> samples)
     {
         points = samples.ToArray();
@@ -21,6 +23,7 @@ public sealed class MarblePath
         if (Length <= 0) throw new ArgumentException("A path needs a positive length.");
     }
 
+    /// <summary>Samples the polyline at a distance clamped to its endpoints.</summary>
     public Vector2 At(float distance)
     {
         distance = Math.Clamp(distance, 0, Length);
@@ -31,8 +34,10 @@ public sealed class MarblePath
         return Vector2.Lerp(points[index - 1], points[index], fraction);
     }
 
+    /// <summary>Estimates the normalized path direction around the supplied distance.</summary>
     public Vector2 Tangent(float distance) => Vector2.Normalize(At(Math.Min(Length, distance + 2)) - At(Math.Max(0, distance - 2)));
 
+    /// <summary>Creates the temple's spiral path while leaving the central launcher clear.</summary>
     public static MarblePath ForLevel(int level)
     {
         // A narrowing temple spiral leaves the launcher clear in its central chamber.

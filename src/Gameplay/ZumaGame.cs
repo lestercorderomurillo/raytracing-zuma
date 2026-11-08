@@ -2,8 +2,10 @@ using Microsoft.Xna.Framework;
 
 namespace RaytracingZuma;
 
+/// <summary>Running, won, or lost state of a Zuma level.</summary>
 public enum PlayState { Playing, Won, Lost }
 
+/// <summary>A colored chain element positioned by distance along the marble path.</summary>
 public sealed class Marble
 {
     public int Id { get; init; }
@@ -11,6 +13,7 @@ public sealed class Marble
     public float Distance { get; set; }
 }
 
+/// <summary>A launched colored marble with world position and velocity.</summary>
 public sealed class Shot
 {
     public int Id { get; init; }
@@ -19,8 +22,10 @@ public sealed class Shot
     public Vector2 Velocity { get; init; }
 }
 
+/// <summary>Match event containing the world position, color, and combo multiplier.</summary>
 public readonly record struct Burst(Vector2 Position, int Color, int Combo);
 
+/// <summary>Deterministic marble-chain simulation independent of rendering and input devices.</summary>
 public sealed class ZumaGame
 {
     public const float Radius = 16;
@@ -47,12 +52,14 @@ public sealed class ZumaGame
     public int BestCombo { get; private set; }
     public float Danger => marbles.Count == 0 ? 0 : marbles[^1].Distance / Path.Length;
 
+    /// <summary>Creates a seeded simulation and starts the first temple.</summary>
     public ZumaGame(int seed = 1459)
     {
         random = new Random(seed);
         StartLevel(0);
     }
 
+    /// <summary>Resets the selected temple's chain and ammunition, optionally retaining the score.</summary>
     public void StartLevel(int level, bool keepScore = false)
     {
         Level = Math.Clamp(level, 0, LevelNames.Length - 1);
@@ -74,17 +81,20 @@ public sealed class ZumaGame
         NextColor = PickColor();
     }
 
+    /// <summary>Chooses a color still present in the chain, falling back to any color when empty.</summary>
     private int PickColor()
     {
         if (marbles.Count == 0) return random.Next(4);
         return marbles[random.Next(marbles.Count)].Color;
     }
 
+    /// <summary>Exchanges loaded and next ammunition while play is active and unpaused.</summary>
     public void Swap()
     {
         if (!Paused && State == PlayState.Playing) (LoadedColor, NextColor) = (NextColor, LoadedColor);
     }
 
+    /// <summary>Launches a shot toward the target if play state, cooldown, and direction allow it.</summary>
     public bool Fire(Vector2 target)
     {
         Vector2 direction = target - Launcher;
@@ -97,6 +107,7 @@ public sealed class ZumaGame
         return true;
     }
 
+    /// <summary>Accumulates elapsed time and advances active play in fixed 120 Hz steps.</summary>
     public void Update(float elapsed)
     {
         if (Paused || State != PlayState.Playing) return;
@@ -109,6 +120,7 @@ public sealed class ZumaGame
         }
     }
 
+    /// <summary>Advances the chain and shots, resolves collisions, and updates win or loss state.</summary>
     private void Step(float elapsed)
     {
         cooldown = Math.Max(0, cooldown - elapsed);
@@ -162,6 +174,7 @@ public sealed class ZumaGame
         if (State != PlayState.Playing) shots.Clear();
     }
 
+    /// <summary>Returns the earliest swept-circle hit fraction, or float.MaxValue when no hit occurs.</summary>
     private static float Intersect(Vector2 offset, Vector2 travel, float radius)
     {
         float squared = offset.LengthSquared() - radius * radius;
@@ -173,6 +186,7 @@ public sealed class ZumaGame
         return time is >= 0 and <= 1 ? time : float.MaxValue;
     }
 
+    /// <summary>Inserts a shot into the chain, restores spacing, and resolves resulting matches.</summary>
     internal void Insert(int index, int color)
     {
         float distance = index == 0 ? Math.Max(0, marbles[0].Distance - Spacing) : marbles[index - 1].Distance + Spacing;
@@ -190,6 +204,7 @@ public sealed class ZumaGame
         }
     }
 
+    /// <summary>Removes matching runs and recursively scores combos formed by closing the gap.</summary>
     private void Resolve(int index, int combo)
     {
         if (index < 0 || index >= marbles.Count) return;
@@ -216,6 +231,7 @@ public sealed class ZumaGame
             Resolve(first, combo + 1);
     }
 
+    /// <summary>Replaces the marble chain with a deterministic arrangement for gameplay checks.</summary>
     internal void SetChain(int[] colors, float start = 0, int remaining = 0)
     {
         marbles.Clear();

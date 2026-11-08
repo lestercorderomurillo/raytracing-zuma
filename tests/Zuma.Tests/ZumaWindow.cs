@@ -3,6 +3,7 @@ using com.radiant.engine.runtime;
 using Microsoft.Xna.Framework;
 using RaytracingZuma;
 
+/// <summary>Checks temple rendering and resizing or captures a single game frame.</summary>
 sealed class ZumaWindow : Window
 {
     private readonly ZumaScene scene = new();
@@ -12,6 +13,7 @@ sealed class ZumaWindow : Window
     private readonly (int width, int height, int level, int quality)[] cases =
         [(1280, 720, 0, 1), (960, 960, 1, 0), (800, 1000, 2, 2), (1440, 600, 0, 1)];
 
+    /// <summary>Creates the test fixture with the supplied scene or window configuration.</summary>
     public ZumaWindow(bool captureOnly = false) : base(new GameLoop(), new() { Title = "Zuma isolated graphics checks" })
     {
         this.captureOnly = captureOnly;
@@ -20,6 +22,7 @@ sealed class ZumaWindow : Window
         GameLoop.SetTargetFps(0);
     }
 
+    /// <inheritdoc/>
     protected override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
@@ -35,6 +38,7 @@ sealed class ZumaWindow : Window
         }
     }
 
+    /// <inheritdoc/>
     protected override void Draw(GameTime gameTime)
     {
         base.Draw(gameTime);

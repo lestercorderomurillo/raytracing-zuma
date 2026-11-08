@@ -4,10 +4,12 @@ using Microsoft.Xna.Framework;
 
 namespace RaytracingZuma;
 
+/// <summary>Connects the Zuma simulation, presentation, and Radiant lighting systems.</summary>
 public sealed class ZumaScene : Scene
 {
     public ZumaGame Game { get; } = new();
 
+    /// <inheritdoc/>
     public override void SetupECS()
     {
         UDRQuality.Set(1);
@@ -26,6 +28,7 @@ public sealed class ZumaScene : Scene
         base.SetupECS();
     }
 
+    /// <inheritdoc/>
     public override void SetupScene()
     {
         Inspector.CreateWindow("zuma", "Zuma", 2, Visible: false);

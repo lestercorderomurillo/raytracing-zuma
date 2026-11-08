@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace RaytracingZuma;
 
+/// <summary>Synchronizes simulation entities, handles player input, and draws the temple and HUD.</summary>
 [RunBefore(typeof(Geometry))]
 [SystemTag("Zuma")]
 public sealed class ZumaPresentation : com.radiant.engine.core.System
@@ -26,6 +27,7 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
     private Vector2 facing = -Vector2.UnitY;
     private Geometry geometry;
 
+    /// <inheritdoc/>
     public override void Initialize()
     {
         game = ((ZumaScene)Scene).Game;
@@ -35,12 +37,14 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
         previousMouse = Mouse.GetState();
     }
 
+    /// <summary>Creates a lit circular entity used by temple artwork or gameplay effects.</summary>
     private int Orb(Vector2 position, float radius, Color emission, float depth, bool blocksLight = false)
     {
         return LightFactory.CreateLight(Scene.ECS, position, radius,
             blocksLight ? Color.White : Color.Transparent, emission, depth);
     }
 
+    /// <summary>Creates the level's temple geometry, path markers, and lighting.</summary>
     private void BuildTemple()
     {
         foreach (int entity in architecture)
@@ -84,6 +88,7 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
         architecture.AddRange([loadedEntity, nextEntity]);
     }
 
+    /// <inheritdoc/>
     public override void Update()
     {
         var keyboard = Keyboard.GetState();
@@ -115,8 +120,10 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
         Scene.ECS.GetComponent<Material>(nextEntity).Emissive = Palette[game.NextColor];
     }
 
+    /// <summary>Updates an entity's world position and spatial lookup.</summary>
     private void Move(int entity, Vector2 position) => Scene.ECS.GetComponent<Transform2D>(entity).Position = position;
 
+    /// <summary>Creates, updates, and removes render entities to match the simulated chain and shots.</summary>
     private void SyncMarbles()
     {
         var alive = new HashSet<int>();
@@ -143,6 +150,7 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
         }
     }
 
+    /// <summary>Updates an orb's position, color, and rolling artwork state.</summary>
     private void SyncOrb(int id, Vector2 position, int color, float travel, float rotation)
     {
         if (!marbleEntities.TryGetValue(id, out int entity))
@@ -155,6 +163,7 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
         marbleSprites[id] = (color, travel, rotation);
     }
 
+    /// <summary>Spawns match effects and advances or removes active particles.</summary>
     private void UpdateParticles(float elapsed)
     {
         foreach (var burst in game.Bursts)
@@ -186,6 +195,7 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
         }
     }
 
+    /// <inheritdoc/>
     public override void LateRender()
     {
         if (geometry.IsDebugging) return;
@@ -235,6 +245,7 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
         Renderer.EndDraw();
     }
 
+    /// <summary>Draws artwork for the visible temple and gameplay entities.</summary>
     private void DrawSurfaces()
     {
         // The painted floor lets a little of HRC's indirect light through.
@@ -288,6 +299,7 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
         Renderer.EndDraw();
     }
 
+    /// <summary>Draws the artwork associated with a single scene entity.</summary>
     private void DrawSurface(int entity)
     {
         var position = Scene.ECS.GetComponent<Transform2D>(entity).Position;
@@ -298,7 +310,9 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
             (int)(radius * 2), (int)(radius * 2)), material.Emissive);
     }
 
+    /// <summary>Draws HUD text at the supplied world-space position.</summary>
     private void Text(string value, Vector2 position, float size, Color color) => Renderer.DrawString("Temple", size, value, position, color);
+    /// <summary>Draws a HUD label centered horizontally at the supplied vertical position.</summary>
     private void CenterText(string value, float y, float size, Color color) => Text(value,
         new Vector2((Renderer.ScreenWidth - Renderer.MeasureString("Temple", size, value).X) / 2, y), size, color);
 }
