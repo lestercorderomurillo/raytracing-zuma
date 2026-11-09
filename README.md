@@ -1,25 +1,32 @@
-# Raytracing Zuma
+<h1 align="center">Raytracing Zuma</h1>
 
-A Zuma-style marble shooter built with the same **C# / .NET 8, Radiant, and MonoGame 3.8.6 DesktopVK** stack as the sibling Pac-Man demo. Uses Radiant's 2D HRC global illumination, color management, and UDR4 temporal upscaling at Balanced quality.
+<p align="center">
+  <a href="https://github.com/lestercorderomurillo/raytracing-zuma/releases/tag/v0.2.0"><img src="https://img.shields.io/badge/release-v0.2.0-E73C00?style=flat-square" alt="Release v0.2.0"></a>
+  <img src="https://img.shields.io/badge/Linux-Vulkan-8B5CF6?style=flat-square" alt="Linux with Vulkan">
+</p>
 
-![Raytracing Zuma: jade frog and carved marbles on a spiral track](docs/screenshots/gameplay.png)
+[![Raytracing Zuma: jade frog and carved marbles on a spiral track](docs/screenshots/gameplay.png)](docs/screenshots/gameplay.png)
 
 Aim the jade frog and fire into the moving chain. Match at least three marbles of the same color to clear them. Joined groups can trigger chain reactions and multiply your score. Clear every marble before the chain reaches the glowing temple exit.
 
-- Three spiral temples with increasing speed and marble counts.
-- Original generated jade-and-bronze frog guardian, painted temple courtyard, and carved temple props.
-- Four marble designs with eight rolling frames each, emissive stone channels, and match particles.
-- Loaded and next marble previews, ammo swapping, score, and danger warning.
-- Pause, restart, level progression, and the Radiant inspector.
-- Proportional board fitting and mouse mapping across window sizes.
+- **Three temples:** spiral tracks with increasing speed and marble counts.
+- **Four marble designs:** rolling animation, glowing stone channels, and match particles.
+- **Chain reactions:** join matching groups, multiply your score, and swap your loaded marble.
+- **Dynamic lighting:** a jade-and-bronze guardian, painted courtyard, and carved temple props lit by Radiant.
 
 ## Play
 
-Requires the sibling `radiant-game-engine` checkout and Vulkan graphics drivers:
+**[Download v0.2.0 for Linux x64](https://github.com/lestercorderomurillo/raytracing-zuma/releases/download/v0.2.0/raytracing-zuma-v0.2.0-linux-x64.tar.gz)** · [Release notes](https://github.com/lestercorderomurillo/raytracing-zuma/releases/tag/v0.2.0) · [Checksums](https://github.com/lestercorderomurillo/raytracing-zuma/releases/download/v0.2.0/SHA256SUMS)
 
 ```sh
-dotnet run -c Release --project raytracing-zuma.csproj
+tar -xzf raytracing-zuma-v0.2.0-linux-x64.tar.gz
+cd raytracing-zuma
+./raytracing-zuma
 ```
+
+Requires Linux x64, Vulkan graphics drivers, and a graphical desktop. Keep the bundled runtime and assets with the executable.
+
+## Controls
 
 | Control | Action |
 | --- | --- |
@@ -32,6 +39,10 @@ dotnet run -c Release --project raytracing-zuma.csproj
 | F1 | Radiant inspector, lighting and UDR quality settings |
 | Esc | Exit |
 
-The game uses Radiant's existing 2D lighting technology; it does not add a separate hardware 3D ray tracer. The character, marble sprites, courtyard, and temple props were newly generated from text descriptions using the built-in image generation tool, without original-game artwork or visual references. See [art sources and prompts](Content/art/README.md).
+## Editor
 
-See [BUILD.md](BUILD.md) for source setup, tests, isolated graphics checks, and publishing.
+Press **F1** to open the Radiant inspector, lighting controls and UDR quality settings. Balanced is the default quality. The board and aiming stay proportional when you resize the window.
+
+[Build and test instructions](BUILD.md) · [Art sources and prompts](Content/art/README.md).
+
+Built with [Radiant](https://github.com/lestercorderomurillo/radiant-game-engine), C# / .NET 8, and MonoGame DesktopVK. Lighting uses Radiant's 2D HRC global illumination and UDR4 upscaling. The artwork was generated from text descriptions without original-game assets or visual references.
