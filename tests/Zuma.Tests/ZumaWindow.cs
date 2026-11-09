@@ -15,7 +15,7 @@ sealed class ZumaWindow : Window
         [(1280, 720, 0, 1), (960, 960, 1, 0), (800, 1000, 2, 2), (1440, 600, 0, 1)];
 
     /// <summary>Creates the test fixture with the supplied scene or window configuration.</summary>
-    public ZumaWindow(bool captureOnly = false) : base(new GameLoop(), new() { Title = "Zuma isolated graphics checks" })
+    public ZumaWindow(bool captureOnly = false) : base(new GameLoop(), new() { ShowLoader = false, Title = "Zuma isolated graphics checks" })
     {
         this.captureOnly = captureOnly;
         GameLoop.AddScene(scene);

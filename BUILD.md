@@ -1,6 +1,6 @@
 # Build and verification
 
-Use a .NET 8 SDK or newer and the matching Radiant development checkout with `com.radiant.engine.graphics` texture, render-target and effect contracts (after v0.3.0). Zuma v0.2.0 remains paired with Radiant v0.3.0; Zuma v0.1.0 with Radiant v0.2.0. Released engine v0.3.0 cannot compile the new resource aliases. Keep `raytracing-zuma` and `radiant-game-engine` as sibling directories, matching the Pac-Man checkout layout. The engine's `eng/Radiant.Desktop.props` pins MonoGame DesktopVK 3.8.6 and restores its content tool. The game consumes the engine's compiled shaders and public Scene/ECS/Renderer APIs, including the current `Transform2D` component. Its own MGCB pipeline compiles the PNG artwork with premultiplied alpha; the atlas manifest is copied alongside the compiled textures.
+Use a .NET 8 SDK or newer and Radiant v0.4.0, including the portable graphics, renderer and window contracts. Zuma v0.3.0 is paired with Radiant v0.4.0. Keep `raytracing-zuma` and `radiant-game-engine` as sibling directories, matching the Pac-Man checkout layout. The engine's `eng/Radiant.Desktop.props` pins MonoGame DesktopVK 3.8.6 and restores its content tool. The game consumes the engine's compiled shaders and public Scene/ECS/Renderer APIs, including the current `Transform2D` component. Its own MGCB pipeline compiles the PNG artwork with premultiplied alpha; the atlas manifest is copied alongside the compiled textures.
 
 ```sh
 dotnet build raytracing-zuma.csproj -c Release

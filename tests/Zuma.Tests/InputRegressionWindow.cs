@@ -17,7 +17,7 @@ internal sealed class InputRegressionWindow : Window
     private readonly ZumaScene scene = new();
     private int step;
 
-    public InputRegressionWindow() : base(new GameLoop(), new() { Title = "Game input regression", Width = 640, Height = 480 })
+    public InputRegressionWindow() : base(new GameLoop(), new() { ShowLoader = false, Title = "Game input regression", Width = 640, Height = 480 })
     {
         GameLoop.AddScene(scene);
         GameLoop.InputSource = input;
