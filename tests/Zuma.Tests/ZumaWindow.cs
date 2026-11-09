@@ -1,3 +1,4 @@
+using Window = com.radiant.engine.backends.monogame.MonoGameWindow;
 using com.radiant.engine.bundle;
 using com.radiant.engine.runtime;
 using Microsoft.Xna.Framework;
@@ -46,11 +47,21 @@ sealed class ZumaWindow : Window
         if (frame % 12 != 0) return;
         var current = cases[testCase];
         var renderer = scene.Renderer;
+        var hudFont = renderer.GetFont("Temple", 20);
+        if (hudFont.Measure("SCORE").X <= 0 || hudFont.LineHeight <= 0 ||
+            !ReferenceEquals(hudFont, renderer.GetFont("Temple", 20)))
+            throw new Exception("Radiant HUD font metrics/cache failed.");
         if (renderer.ScreenWidth != current.width || renderer.ScreenHeight != current.height)
             throw new Exception("Resize failed.");
         var world = new Vector2(420, 310);
         if (Vector2.Distance(renderer.ScreenToWorld(renderer.WorldToScreen(world)), world) > 0.01f)
             throw new Exception("Aim coordinate mapping failed.");
+        var spritePosition = Vector2.Transform(world, renderer.WorldTransform);
+        if (Vector2.Distance(spritePosition, renderer.WorldToScreen(world)) > 0.01f)
+            throw new Exception("Marble projection disagrees with aim coordinates.");
+        if (renderer.ScaledWidth != Math.Max(1, (int)(renderer.ScreenWidth * renderer.RenderScale)) ||
+            renderer.ScaledHeight != Math.Max(1, (int)(renderer.ScreenHeight * renderer.RenderScale)))
+            throw new Exception("Scaled view metrics were not refreshed after resize.");
         var lighting = scene.ECS.GetSystem<HRCGI>().GetOutput();
         if (lighting.Width != renderer.ScaledSize.X || lighting.Height != renderer.ScaledSize.Y)
             throw new Exception("Lighting quality size mismatch.");

@@ -1,6 +1,5 @@
 using System.Text.Json;
 using com.radiant.engine.core;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace RaytracingZuma;
 
@@ -15,7 +14,7 @@ public sealed class ZumaArtwork
     private readonly Rectangle[] propFrames;
 
     /// <summary>Loads the atlas textures and frame metadata through the renderer.</summary>
-    public ZumaArtwork(Renderer renderer)
+    public ZumaArtwork(IRenderer renderer)
     {
         Frog = renderer.GetTexture("art/frog-guardian");
         Marbles = renderer.GetTexture("art/marbles-roll");
@@ -43,7 +42,7 @@ public sealed class ZumaArtwork
     }
 
     /// <summary>Draws the marble's atlas frame selected by color and traveled distance.</summary>
-    public void DrawMarble(Renderer renderer, Vector2 position, float radius, int color, float travel = 0, float rotation = 0)
+    public void DrawMarble(IRenderer renderer, Vector2 position, float radius, int color, float travel = 0, float rotation = 0)
     {
         var source = marbleFrames[color * MarbleAnimation.Frames + MarbleAnimation.FrameAt(travel)];
         var destination = new Rectangle((int)position.X, (int)position.Y, (int)(radius * 2), (int)(radius * 2));
@@ -52,14 +51,14 @@ public sealed class ZumaArtwork
     }
 
     /// <summary>Draws the selected temple prop at the requested position and size.</summary>
-    public void DrawProp(Renderer renderer, int index, Vector2 position, float radius)
+    public void DrawProp(IRenderer renderer, int index, Vector2 position, float radius)
     {
         renderer.DrawSprite(Props, new Rectangle((int)(position.X - radius), (int)(position.Y - radius),
             (int)(radius * 2), (int)(radius * 2)), propFrames[index], Color.White);
     }
 
     /// <summary>Draws the launcher artwork at its current aim angle.</summary>
-    public void DrawFrog(Renderer renderer, Vector2 position, float rotation)
+    public void DrawFrog(IRenderer renderer, Vector2 position, float rotation)
     {
         renderer.DrawSprite(Frog, new Rectangle((int)position.X, (int)position.Y, 160, 160), null, Color.White,
             rotation, new Vector2(Frog.Width / 2f, Frog.Height / 2f));
