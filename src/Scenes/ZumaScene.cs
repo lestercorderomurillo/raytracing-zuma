@@ -24,7 +24,6 @@ public sealed class ZumaScene : Scene
         var upscaler = ECS.AddSystem<UDR4>();
         upscaler.SetInputSource(color.GetOutput);
         ECS.AddSystem<ZumaPresentation>();
-        base.SetupECS();
     }
 
     /// <inheritdoc/>
@@ -35,6 +34,5 @@ public sealed class ZumaScene : Scene
         Inspector.AddButton("zuma", "restart", "Restart level", () => Game.StartLevel(Game.Level));
         Inspector.AddToggle("zuma", "pause", "Pause gameplay", false, paused => Game.Paused = paused);
         Inspector.AddDropdown("zuma", "level", "Level", ZumaGame.LevelNames, 0, level => Game.StartLevel(level));
-        base.SetupScene();
     }
 }
