@@ -97,3 +97,9 @@ if (args.Contains("--graphics") || args.Contains("--capture"))
     using var window = new ZumaWindow(args.Contains("--capture"));
     window.Run();
 }
+
+if (args.Contains("--input"))
+{
+    using var window = new InputRegressionWindow();
+    window.Run();
+}

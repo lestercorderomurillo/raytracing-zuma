@@ -1,4 +1,3 @@
-using Microsoft.Xna.Framework;
 
 namespace RaytracingZuma;
 
@@ -99,7 +98,7 @@ public sealed class ZumaGame
     {
         Vector2 direction = target - Launcher;
         if (Paused || State != PlayState.Playing || cooldown > 0 || direction.LengthSquared() < 1) return false;
-        direction.Normalize();
+        direction = Vector2.Normalize(direction);
         shots.Add(new Shot { Id = nextId++, Color = LoadedColor, Position = Launcher + direction * 42, Velocity = direction * 1050 });
         LoadedColor = NextColor;
         NextColor = PickColor();

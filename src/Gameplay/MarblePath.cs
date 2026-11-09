@@ -1,4 +1,3 @@
-using Microsoft.Xna.Framework;
 
 namespace RaytracingZuma;
 
@@ -47,10 +46,10 @@ public sealed class MarblePath
         for (int sampleIndex = 0; sampleIndex <= 600; sampleIndex++)
         {
             float progress = sampleIndex / 600f;
-            float angle = MathHelper.Pi + progress * MathHelper.TwoPi * turns;
-            float radiusX = MathHelper.Lerp(510, 180, progress);
-            float radiusY = MathHelper.Lerp(245, 115, progress);
-            float ripple = level == 2 ? 10 * MathF.Sin(progress * MathHelper.TwoPi * 5) : 0;
+            float angle = global::System.MathF.PI + progress * (2 * global::System.MathF.PI) * turns;
+            float radiusX = 510 + (180 - 510) * progress;
+            float radiusY = 245 + (115 - 245) * progress;
+            float ripple = level == 2 ? 10 * MathF.Sin(progress * (2 * global::System.MathF.PI) * 5) : 0;
             samples.Add(new Vector2(640 + (radiusX + ripple) * MathF.Cos(angle), 393 + (radiusY + ripple) * MathF.Sin(angle)));
         }
 

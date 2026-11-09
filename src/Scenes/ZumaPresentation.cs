@@ -1,8 +1,7 @@
 using com.radiant.engine.bundle;
 using com.radiant.engine.core;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using com.radiant.engine.input;
 
 namespace RaytracingZuma;
 
@@ -17,8 +16,6 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
     private readonly Dictionary<int, int> marbleEntities = [];
     private readonly List<int> architecture = [];
     private readonly List<(int entity, Vector2 position, Vector2 velocity, float life, Color color)> particles = [];
-    private KeyboardState previousKeys;
-    private MouseState previousMouse;
     private Vector2 aim = ZumaGame.Launcher - Vector2.UnitY * 200;
     private int loadedEntity;
     private int nextEntity;
@@ -33,8 +30,6 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
         game = ((ZumaScene)Scene).Game;
         geometry = Scene.ECS.GetSystem<Geometry>();
         artwork = new ZumaArtwork(Renderer);
-        previousKeys = Keyboard.GetState();
-        previousMouse = Mouse.GetState();
     }
 
     /// <summary>Creates a lit circular entity used by temple artwork or gameplay effects.</summary>
@@ -91,29 +86,27 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
     /// <inheritdoc/>
     public override void Update()
     {
-        var keyboard = Keyboard.GetState();
-        var mouse = Mouse.GetState();
-        bool Pressed(Keys key) => keyboard.IsKeyDown(key) && previousKeys.IsKeyUp(key);
-        if (Pressed(Keys.P) || Pressed(Keys.Space)) game.Paused = !game.Paused;
-        if (Pressed(Keys.R)) game.StartLevel(game.Level);
-        if (Pressed(Keys.Enter) && game.State != PlayState.Playing)
+        var mouse = Controls.Mouse;
+        bool Pressed(Key key) => Controls.WasPressed(key);
+        if (Pressed(Key.P) || Pressed(Key.Space)) game.Paused = !game.Paused;
+        if (Pressed(Key.R)) game.StartLevel(game.Level);
+        if (Pressed(Key.Enter) && game.State != PlayState.Playing)
             game.StartLevel(game.State == PlayState.Won ? (game.Level + 1) % ZumaGame.LevelNames.Length : game.Level, game.State == PlayState.Won);
 
         if (!Inspector.IsMouseOverUI())
         {
             aim = Renderer.ScreenToWorld(new Vector2(mouse.X, mouse.Y));
-            if (Pressed(Keys.Q) || (mouse.RightButton == ButtonState.Pressed && previousMouse.RightButton == ButtonState.Released)) game.Swap();
+            if (Pressed(Key.Q) || Controls.WasPressed(MouseButton.Right)) game.Swap();
             if (mouse.LeftButton == ButtonState.Pressed) game.Fire(aim);
         }
-        previousKeys = keyboard;
-        previousMouse = mouse;
-        game.Update((float)GameTime.ElapsedGameTime.TotalSeconds);
+
+        game.Update(Time.DeltaSeconds);
         if (builtPath != game.Path) BuildTemple();
         SyncMarbles();
-        UpdateParticles(game.Paused ? 0 : (float)GameTime.ElapsedGameTime.TotalSeconds);
+        UpdateParticles(game.Paused ? 0 : Time.DeltaSeconds);
         var direction = aim - ZumaGame.Launcher;
         if (direction.LengthSquared() < 1) direction = -Vector2.UnitY;
-        direction.Normalize();
+        direction = Vector2.Normalize(direction);
         facing = direction;
         Move(loadedEntity, ZumaGame.Launcher + direction * 50);
         Scene.ECS.GetComponent<Material>(loadedEntity).Emissive = Palette[game.LoadedColor];
@@ -170,7 +163,7 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
         {
             for (int sparkIndex = 0; sparkIndex < 7; sparkIndex++)
             {
-                float angle = sparkIndex * MathHelper.TwoPi / 7;
+                float angle = sparkIndex * (2 * global::System.MathF.PI) / 7;
                 var velocity = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * (65 + burst.Combo * 20);
                 int entity = Orb(burst.Position, 3, Palette[burst.Color], 120);
                 particles.Add((entity, burst.Position, velocity, 0.5f, Palette[burst.Color]));
@@ -262,7 +255,7 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
         artwork.DrawProp(Renderer, 0, ZumaGame.Launcher, 82);
         artwork.DrawProp(Renderer, 3, new Vector2(330, 635), 27);
         artwork.DrawProp(Renderer, 3, new Vector2(950, 635), 27);
-        float frogAngle = MathF.Atan2(facing.Y, facing.X) + MathHelper.PiOver2;
+        float frogAngle = MathF.Atan2(facing.Y, facing.X) + (global::System.MathF.PI / 2);
         artwork.DrawFrog(Renderer, ZumaGame.Launcher, frogAngle);
         artwork.DrawMarble(Renderer, ZumaGame.Launcher + facing * 50, ZumaGame.Radius, game.LoadedColor);
         artwork.DrawProp(Renderer, 0, ZumaGame.Launcher + new Vector2(0, 73), 16);
@@ -273,7 +266,7 @@ public sealed class ZumaPresentation : com.radiant.engine.core.System
             Vector2 direction = aim - ZumaGame.Launcher;
             if (direction.LengthSquared() >= 1)
             {
-                direction.Normalize();
+                direction = Vector2.Normalize(direction);
 
                 for (int dotIndex = 0; dotIndex < 7; dotIndex++)
                 {

@@ -1,6 +1,6 @@
 # Build and verification
 
-Use a .NET 8 SDK or newer and [Radiant v0.2.0](https://github.com/lestercorderomurillo/radiant-game-engine/releases/tag/v0.2.0). Zuma v0.1.0 is paired with that engine release. Keep `raytracing-zuma` and `radiant-game-engine` as sibling directories, matching the Pac-Man checkout layout. The engine's `eng/Radiant.Desktop.props` pins MonoGame DesktopVK 3.8.6 and restores its content tool. The game consumes the engine's compiled shaders and public Scene/ECS/Renderer APIs, including the current `Transform2D` component. Its own MGCB pipeline compiles the PNG artwork with premultiplied alpha; the atlas manifest is copied alongside the compiled textures.
+Use a .NET 8 SDK or newer and [Radiant v0.3.0](https://github.com/lestercorderomurillo/radiant-game-engine/releases/tag/v0.3.0) with `FrameTime`, input snapshots, System.Numerics math and Radiant color/render-state types. Historical Zuma v0.1.0 remains paired with Radiant v0.2.0; current sources require the new API. Keep `raytracing-zuma` and `radiant-game-engine` as sibling directories, matching the Pac-Man checkout layout. The engine's `eng/Radiant.Desktop.props` pins MonoGame DesktopVK 3.8.6 and restores its content tool. The game consumes the engine's compiled shaders and public Scene/ECS/Renderer APIs, including the current `Transform2D` component. Its own MGCB pipeline compiles the PNG artwork with premultiplied alpha; the atlas manifest is copied alongside the compiled textures.
 
 ```sh
 dotnet build raytracing-zuma.csproj -c Release
@@ -46,3 +46,19 @@ Keep the complete output together, including runtime, native libraries, fonts, a
 ## Shared camera controller
 
 With Radiant v0.2.1, open F1 > ECS > Open Camera Controls, or use the Camera controls button in the game settings. The single window searches camera IDs/types and selects instances independently of the entity inspector. This game uses the fitted 2D World view: enable Navigate camera and hold RMB with WASD to pan, or use Zoom in / Zoom out. Adjust movement speed for world units. Closing the controller stops navigation. Changing levels restores the game framing where the scene calls FitWorld.
+
+## Radiant input and value types
+
+Gameplay uses `Time.DeltaSeconds`, `Controls.Mouse` and `Controls.WasPressed`.
+The runtime owns keyboard/mouse edge detection, so held pause/swap buttons do not
+repeat. `src/RadiantTypes.cs` selects public .NET/Radiant types and is linked into
+the tests without depending on the engine's private compilation aliases.
+
+After building, run the input regression in addition to the graphics checks:
+
+```sh
+xvfb-run -a -s '-screen 0 1600x1200x24 -extension MIT-SHM' dotnet tests/Zuma.Tests/bin/Release/net8.0/Zuma.Tests.dll --input
+```
+
+It checks pause edges, held keys, keyboard/right-mouse ammo swaps and restart through
+the actual presentation system using an injected Radiant input source.

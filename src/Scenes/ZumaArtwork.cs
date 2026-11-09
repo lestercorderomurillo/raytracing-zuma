@@ -1,6 +1,5 @@
 using System.Text.Json;
 using com.radiant.engine.core;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace RaytracingZuma;
@@ -37,7 +36,7 @@ public sealed class ZumaArtwork
         {
             var rectangle = new Rectangle(frame.GetProperty("x").GetInt32(), frame.GetProperty("y").GetInt32(),
                 frame.GetProperty("width").GetInt32(), frame.GetProperty("height").GetInt32());
-            if (rectangle.Width <= 0 || rectangle.Height <= 0 || !texture.Bounds.Contains(rectangle))
+            if (rectangle.Width <= 0 || rectangle.Height <= 0 || !new Rectangle(0, 0, texture.Width, texture.Height).Contains(rectangle))
                 throw new InvalidDataException("An artwork frame falls outside its texture.");
             return rectangle;
         }).ToArray();
